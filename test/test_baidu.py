@@ -7,6 +7,7 @@ import unittest
 import sys
 sys.path.append(os.path.abspath('.'))
 from utils.config import Config, DRIVER_PATH
+from utils.log import logger
 
 class TestBaiDu(unittest.TestCase):
     # 配置分离
@@ -18,7 +19,7 @@ class TestBaiDu(unittest.TestCase):
     locator_result = (By.XPATH, '//*[@id="content_left"]/div/h3/a')
     
     def setUp(self):
-        self.driver = webdriver.Chrome(executable_path=DRIVER_PATH + '\chromedriver.exe')
+        self.driver = webdriver.Chrome(executable_path=DRIVER_PATH + r'\chromedriver.exe')
         self.driver.get(self.URL)
     
     def tearDown(self):
@@ -30,8 +31,8 @@ class TestBaiDu(unittest.TestCase):
         sleep(2)
         results = self.driver.find_elements(*self.locator_result)
         for r in results:
-            print(r.get_attribute('href'))
-            print(r.text)
+            logger.info(r.get_attribute('href'))
+            logger.info(r.text)
 
     def test_search_1(self):
         self.driver.find_element(*self.locator_kw).send_keys("python")
@@ -39,8 +40,8 @@ class TestBaiDu(unittest.TestCase):
         sleep(2)
         results = self.driver.find_elements(*self.locator_result)
         for r in results:
-            print(r.get_attribute('href'))
-            print(r.text)
+            logger.info(r.get_attribute('href'))
+            logger.info(r.text)
 
 if __name__ == "__main__":
     unittest.main()
