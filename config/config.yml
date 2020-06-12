@@ -3,6 +3,6 @@ URL: https://www.baidu.com
 log:
     file_name: test.log
     back_up: 5
-    console_level: WARNING
-    file_level: DEBUG
+    console_level: DEBUG
+    file_level: INFO
     pattern: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
