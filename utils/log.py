@@ -1,16 +1,25 @@
 import os
 import logging
 from logging.handlers import TimedRotatingFileHandler
+
+# 导入自己的模块需要添加系统路径
+import sys
+sys.path.append(os.path.abspath('.'))
+
 from utils.config import Config, LOG_PATH
 
 class Logger(object):
 
+    # 实例化时可传入logger名，先获取配置
     def __init__(self, logger_name = 'framework'):
         self.logger = logging.getLogger(logger_name)
-        logging.root.setLevel(logging.NOTSET)
+        logging.root.setLevel(logging.NOTSET)  # root不设level即所有级别日志都输出
+
+        # 先获取log的dict配置
         c = Config().get('log')
         self.log_file_name = c.get('file_name') if c and c.get('file_name') else 'test.log'
         self.backup_count = c.get('backup') if c and c.get('backup') else 5
+
         # 日志输出级别
         self.console_output_level = c.get('console_level') if c and c.get('console_level') else 'WARNING'
         self.file_output_level = c.get('file_level') if c and c.get('file_level') else 'DEBUG'
@@ -20,13 +29,16 @@ class Logger(object):
         self.formatter = logging.Formatter(pattern)
 
     def get_logger(self):
+        # 返回日志类的实例
         # 在logger中添加日志句柄并返回，如果已有句柄，则直接返回
-        if not self.logger.handlers:
+        if not self.logger.handlers:  # 防止重复日志，重复添加handler
+            # 输出到console， WARNING
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(self.formatter)
             console_handler.setLevel(self.console_output_level)
             self.logger.addHandler(console_handler)
 
+            # 输出到文件， DEBUG
             # 每天重新创建一个日志文件，最多保留back_upcount份
             file_handler = TimedRotatingFileHandler(filename=os.path.join(LOG_PATH, self.log_file_name),
                                                     when='D',
@@ -40,4 +52,11 @@ class Logger(object):
         return self.logger
 
 logger = Logger().get_logger()
+
+if __name__ == "__main__":
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.fatal('fatal')
+
 

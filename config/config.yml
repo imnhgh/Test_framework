@@ -1,3 +1,4 @@
+# 分段写，data是一个list有两个dict
 URL: https://www.baidu.com
 log:
     file_name: test.log

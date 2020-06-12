@@ -13,7 +13,6 @@ class TestBaiDu(unittest.TestCase):
     # 配置分离
     URL = Config().get('URL')
 
-
     locator_kw = (By.ID, 'kw')
     locator_su = (By.ID, 'su')
     locator_result = (By.XPATH, '//*[@id="content_left"]/div/h3/a')
