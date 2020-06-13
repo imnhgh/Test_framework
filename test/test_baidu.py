@@ -6,9 +6,10 @@ import unittest
 # 导入自己的模块需要添加系统路径
 import sys
 sys.path.append(os.path.abspath('.'))
-from utils.config import Config, DRIVER_PATH, DATA_PATH
+from utils.config import Config, DRIVER_PATH, DATA_PATH, REPORT_PATH
 from utils.log import logger
 from utils.file_reader import ExcelReader
+from utils.HTMLTestRunner import HTMLTestRunner
 
 class TestBaiDu(unittest.TestCase):
     # 配置分离 数据分离
@@ -29,6 +30,9 @@ class TestBaiDu(unittest.TestCase):
     def test_search(self):
         datas = ExcelReader(self.excel).data
         for d in datas:
+            # 不用subtest的话某个用例判定出错则会退出，不去执行后面的
+            # 相当于写了n个方法，每个方法测试一个数据
+            # subTest没有setup和teardown，需要手动添加
             with self.subTest(data=d):
                 logger.debug("test begin -> %s" % d['search'])
                 self.sub_setUp()
@@ -54,8 +58,11 @@ if __name__ == "__main__":
 # 0 (静默模式): 你只能获得总的测试用例数和总的结果 比如 总共10个 失败2 成功8
 # 1 (默认模式): 非常类似静默模式 只是在每个成功的用例前面有个“.” 每个失败的用例前面有个 “F”
 # 2 (详细模式):测试结果会显示每个测试用例的所有相关的信息
-    unittest.main(verbosity=2)
-
+    #unittest.main(verbosity=2)
+    report = os.path.join(REPORT_PATH, 'report.html')
+    with open(report, 'wb') as f:
+        runner = HTMLTestRunner(f, verbosity=2, title='TestFrame测试框架', description='修改html测试报告')
+        runner.run(TestBaiDu('test_search'))
 
 # 通过By和直接调用无差别
 # driver.find_element_by_id('kw').send_keys("selenium")
