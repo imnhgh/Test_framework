@@ -10,6 +10,7 @@ from utils.config import Config, DRIVER_PATH, DATA_PATH, REPORT_PATH
 from utils.log import logger
 from utils.file_reader import ExcelReader
 from utils.HTMLTestRunner import HTMLTestRunner
+from utils.mail import Email
 
 class TestBaiDu(unittest.TestCase):
     # 配置分离 数据分离
@@ -60,9 +61,21 @@ if __name__ == "__main__":
 # 2 (详细模式):测试结果会显示每个测试用例的所有相关的信息
     #unittest.main(verbosity=2)
     report = os.path.join(REPORT_PATH, 'report.html')
-    with open(report, 'wb') as f:
-        runner = HTMLTestRunner(f, verbosity=2, title='TestFrame测试框架', description='修改html测试报告')
-        runner.run(TestBaiDu('test_search'))
+    # with open(report, 'wb') as f:
+    #     runner = HTMLTestRunner(f, verbosity=2, title='TestFrame测试框架', description='修改html测试报告')
+    #     runner.run(TestBaiDu('test_search'))
+
+    # 发送邮件
+    e = Email(server='smtp.qq.com',
+              sender='linhao175@qq.com',
+              password='******',
+              receiver='linhao175@gmail.com',
+              title="frame_work测试报告",
+              message="2020-06-13的测试报告",
+              path=report
+            )
+    e.send()
+
 
 # 通过By和直接调用无差别
 # driver.find_element_by_id('kw').send_keys("selenium")
